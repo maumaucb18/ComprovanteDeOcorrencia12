@@ -34,8 +34,9 @@
 
           // Criando uma nova janela para impressão
           var win = window.open("", "printWindow");
+          win.document.write('<style>img { display: block; margin-left: auto; margin-right: auto; }</style>');
           win.document.write('<img src="img/rodoviario.png" "justfy-content:center">');
-
+          
 
           win.document.write(
             "<html><head><title>Certidão de Acidente de Trânsito</title>"
