@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Certidão de Acidente de Trânsito</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.4.4/qrcode.min.js"></script>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 280px; /* 80mm para impressora térmica */
+        margin: 0 auto;
+      }
+      .container h2 {
+        justify-content: center;
+        text-align: center;
+      }
+      input[type="text"],
+      select {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        box-sizing: border-box;
+        text-transform: uppercase;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Certidão de Acidente de Trânsito</h2>
+      <form id="print-form" onsubmit="return false;">
+        <label for="grupo_rodoviario">Grupo Rodoviário:</label>
+        <input
+          type="text"
+          id="grupo_rodoviario"
+          name="grupo_rodoviario"
+          required
+        />
+
+        <label for="data_acidente">Data do Acidente:</label>
+        <input
+          type="date"
+          id="data_acidente"
+          name="data_acidente"
+          placeholder="DD/MM/AAAA"
+          required
+        />
+
+        <label for="hora_acidente">Hora do Acidente:</label>
+        <input
+          type="time"
+          id="hora_acidente"
+          name="hora_acidente"
+          placeholder="HH:MM"
+          required
+        />
+        <br />
+        <br />
+        <label for="rodovia">Rodovia:</label>
+        <input type="text" id="rodovia" name="rodovia" required />
+
+        <label for="km">Km:</label>
+        <input type="text" id="km" name="km" required />
+
+        <label for="ME">Militar Atendente:</label>
+        <input type="text" id="ME" name="ME" required />
+
+        <button type="button" id="btnPrint">Imprimir</button>
+      </form>
+    </div>
+
+    <script src="./logic.js"></script>
+  </body>
+</html>
