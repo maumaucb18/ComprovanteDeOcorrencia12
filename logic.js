@@ -7,8 +7,7 @@ document.getElementById("btnPrint").addEventListener("click", function () {
   var ME = document.getElementById("ME").value.toUpperCase();
 
   // Adicionando o cabeçalho
-  win.document.write('<style>img { display: block; margin-left: auto; margin-right: auto; }</style>');
-  win.document.write('<img src="img/rodoviario.png" "justfy-content:center">');
+  
   var printContent = "<h1 style='text-align:center;'>Comando Rodoviário da Brigada Militar</h1>";
   printContent += "<h2 style='text-align:center;'>Certidão de Acidente de Trânsito</h2>";
   
@@ -26,6 +25,8 @@ document.getElementById("btnPrint").addEventListener("click", function () {
 
   // Criando uma nova janela para impressão
   var win = window.open("", "printWindow");
+  win.document.write('<style>img { display: block; margin-left: auto; margin-right: auto; }</style>');
+  win.document.write('<img src="img/rodoviario.png" "justfy-content:center">');
   win.document.write("<html><head><title>Certidão de Acidente de Trânsito</title>");
   win.document.write("<style>body { font-family: Arial, sans-serif; }</style>");
   win.document.write("</head><body style='width: 80mm; margin: auto;'>");
