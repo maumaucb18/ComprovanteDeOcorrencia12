@@ -7,6 +7,8 @@ document.getElementById("btnPrint").addEventListener("click", function () {
   var ME = document.getElementById("ME").value.toUpperCase();
 
   // Adicionando o cabeçalho
+  win.document.write('<style>img { display: block; margin-left: auto; margin-right: auto; }</style>');
+  win.document.write('<img src="img/rodoviario.png" "justfy-content:center">');
   var printContent = "<h1 style='text-align:center;'>Comando Rodoviário da Brigada Militar</h1>";
   printContent += "<h2 style='text-align:center;'>Certidão de Acidente de Trânsito</h2>";
   
