@@ -1,46 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Certidão de Acidente de Trânsito</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.4.4/qrcode.min.js"></script>
-
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-      }
-      .container {
-        max-width: 280px; /* 80mm para impressora térmica */
-        margin: 0 auto;
-      }
-      .container h2 {
-        justify-content: center;
-        text-align: center;
-      }
-      input[type="text"],
-      select {
-        width: 100%;
-        padding: 10px;
-        margin: 5px 0;
-        box-sizing: border-box;
-        text-transform: uppercase;
-      }
-      button {
-        width: 100%;
-        padding: 10px;
-        background-color: #4caf50;
-        color: white;
-        border: none;
-        cursor: pointer;
-      }
-      button:hover {
-        background-color: #45a049;
-      }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title> Certidão de Acidente de Trânsito</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.4.4/qrcode.min.js"></script defer>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <div class="container">
