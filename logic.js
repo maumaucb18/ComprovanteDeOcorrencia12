@@ -53,7 +53,7 @@ async function imprimirViaBluetooth() {
 
       // Enviar dados para a impressora Bluetooth
       await characteristic.writeValue(new TextEncoder().encode(printContent));
-
+      
       // Fechar a conexão com a impressora
       await server.disconnect();
 
