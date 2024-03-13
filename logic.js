@@ -32,16 +32,27 @@ document.getElementById("btnPrint").addEventListener("click", async function () 
     printContent += "<p><strong>Solicite sua ocorrência através do site <a href='http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/'>http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/</a></strong></p>";
     printContent += "<p><strong>Retire sua ocorrência com a chave de acesso pelo site <a href='https://crbm.bm.rs.gov.br/retire-sua-certidao/'>https://crbm.bm.rs.gov.br/retire-sua-certidao/</a></strong></p>";
 
-    // Enviar dados para a impressora Bluetooth
-    await characteristic.writeValue(new TextEncoder().encode(printContent));
-
-    // Fechar a conexão com a impressora
-    await server.disconnect();
-
-    // Exibir mensagem de sucesso
-    alert("Documento enviado para impressão com sucesso!");
-  } catch (error) {
-    console.error("Erro ao imprimir:", error);
-    alert("Erro ao imprimir documento. Por favor, tente novamente.");
-  }
+    async function connectToBluetoothPrinter() {
+      try {
+        // Solicitar permissão para acessar dispositivos Bluetooth
+        const device = await navigator.bluetooth.requestDevice({
+          filters: [{ services: ['bluetooth_printer_service_uuid_here'] }]
+        });
+    
+        // Conectar-se ao dispositivo selecionado
+        const server = await device.gatt.connect();
+        const service = await server.getPrimaryService('bluetooth_printer_service_uuid_here');
+        const characteristic = await service.getCharacteristic('bluetooth_printer_characteristic_uuid_here');
+    
+        // Agora você pode enviar comandos de impressão para a impressora usando a característica
+        await characteristic.writeValue(new Uint8Array([/* Dados de impressão aqui */]));
+    
+        console.log('Comando de impressão enviado com sucesso.');
+      } catch (error) {
+        console.error('Erro ao conectar-se à impressora térmica Bluetooth:', error);
+      }
+    }
+    
+    // Chamar a função para conectar-se à impressora térmica Bluetooth
+    connectToBluetoothPrinter();
 });
