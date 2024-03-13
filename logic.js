@@ -1,5 +1,31 @@
-async function imprimirViaBluetooth() {
+// Verifica se o Bluetooth está ativado no dispositivo
+function verificarBluetoothAtivado() {
+  return new Promise((resolve, reject) => {
+      if ("bluetooth" in navigator) {
+          navigator.bluetooth.getAvailability()
+              .then(availability => {
+                  resolve(availability.avaliable);
+              })
+              .catch(error => {
+                  reject(error);
+              });
+      } else {
+          reject(new Error("Bluetooth não está disponível neste navegador."));
+      }
+  });
+}
+
+// Função para solicitar permissão para acessar dispositivos Bluetooth
+async function solicitarPermissaoBluetooth() {
   try {
+      // Verificar se o Bluetooth está ativado
+      const bluetoothAtivado = await verificarBluetoothAtivado();
+      
+      if (!bluetoothAtivado) {
+          alert("O Bluetooth não está ativado no dispositivo.");
+          return;
+      }
+
       // Solicitar permissão para acessar dispositivos Bluetooth
       const device = await navigator.bluetooth.requestDevice({
           filters: [{ services: ['print_service_uuid'] }],
@@ -10,6 +36,10 @@ async function imprimirViaBluetooth() {
       const server = await device.gatt.connect();
       const service = await server.getPrimaryService('print_service_uuid');
       const characteristic = await service.getCharacteristic('print_characteristic_uuid');
+
+// Chamar a função para solicitar permissão para acessar dispositivos Bluetooth
+solicitarPermissaoBluetooth();
+
 
       // Obter dados do formulário
       var grupoRodoviario = document.getElementById("grupo_rodoviario").value.toUpperCase();
