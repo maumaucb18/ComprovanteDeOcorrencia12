@@ -1,33 +1,4 @@
-// Classe para lidar com a impressora Bluetooth
-class BluetoothPrinter {
-  constructor() {
-      this.socket = null;
-  }
-
-  async conectarImpressoraBluetooth() {
-      try {
-          // Solicitar permissão para acessar dispositivos Bluetooth
-          const device = await navigator.bluetooth.requestDevice({
-              filters: [{ services: ['00001800-0000-1000-8000-00805f9b34fb'] }],
-              optionalServices: ['00001800-0000-1000-8000-00805f9b34fb']
-          });
-
-          // Conectar à impressora Bluetooth selecionada
-          const server = await device.gatt.connect();
-          const service = await server.getPrimaryService('00001800-0000-1000-8000-00805f9b34fb');
-          const characteristic = await service.getCharacteristic('00001234-0000-1000-8000-00805f9b34fb');
-
-          return characteristic;
-      } catch (error) {
-          console.error("Erro ao conectar-se à impressora Bluetooth:", error);
-          return null;
-      }
-  }
-}
-
-// Função para gerar o conteúdo a ser impresso
-function gerarConteudoImpressao() {
-  // Obter dados do formulário
+document.getElementById("btnPrint").addEventListener("click", function () {
   var grupoRodoviario = document.getElementById("grupo_rodoviario").value.toUpperCase();
   var dataAcidente = document.getElementById("data_acidente").value;
   var horaAcidente = document.getElementById("hora_acidente").value;
@@ -35,67 +6,31 @@ function gerarConteudoImpressao() {
   var km = document.getElementById("km").value.toUpperCase();
   var ME = document.getElementById("ME").value.toUpperCase();
 
-  // Construir conteúdo a ser impresso
-  var printContent = "Comando Rodoviário da Brigada Militar\n";
-  printContent += "Certidão de Acidente de Trânsito\n";
-  printContent += "Grupo Rodoviário: " + grupoRodoviario + "\n";
-  printContent += "Data do Acidente: " + dataAcidente + "\n";
-  printContent += "Hora do Acidente: " + horaAcidente + "\n";
-  printContent += "Rodovia: " + rodovia + "\n";
-  printContent += "Km: " + km + "\n";
-  printContent += "Militar Atendente: " + ME + "\n";
-  printContent += "Telefone de Contato: (51) 36055000\n";
-  printContent += "Solicite sua ocorrência através do site http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/\n";
-  printContent += "Retire sua ocorrência com a chave de acesso pelo site https://crbm.bm.rs.gov.br/retire-sua-certidao/";
+  // Adicionando o cabeçalho
+  var printContent = "<h1 style='text-align:center;'>Comando Rodoviário da Brigada Militar</h1>";
+  printContent += "<h2 style='text-align:center;'>Certidão de Acidente de Trânsito</h2>";
+  
+  // Adicionando os dados do formulário
+  printContent += "<p><strong>Grupo Rodoviário:</strong> " + grupoRodoviario + "</p>";
+  printContent += "<p><strong>Data do Acidente:</strong> " + dataAcidente + "</p>";
+  printContent += "<p><strong>Hora do Acidente:</strong> " + horaAcidente + "</p>";
+  printContent += "<p><strong>Rodovia:</strong> " + rodovia + "</p>";
+  printContent += "<p><strong>Km:</strong> " + km + "</p>";
+  printContent += "<p><strong>Militar Atendente:</strong> " + ME + "</p>";
 
-  return printContent;
-}
+  printContent += "<p><strong>Telefone de Contato: (51) 36055000 </strong></p>";
+  printContent += "<p><strong>Solicite sua ocorrência através do site <a href='http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/'>http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/</a></strong></p>";
+  printContent += "<p><strong>Retire sua ocorrência com a chave de acesso pelo site <a href='https://crbm.bm.rs.gov.br/retire-sua-certidao/'>https://crbm.bm.rs.gov.br/retire-sua-certidao/</a></strong></p>";
 
-// Função para imprimir via Bluetooth
-async function imprimirViaBluetooth(printContent) {
-  try {
-      // Instanciar a classe BluetoothPrinter e conectar-se à impressora Bluetooth
-      const printer = new BluetoothPrinter();
-      const characteristic = await printer.conectarImpressoraBluetooth();
-      if (!characteristic) {
-          alert("Não foi possível conectar-se à impressora Bluetooth.");
-          return;
-      }
+  // Criando uma nova janela para impressão
+  var win = window.open("", "printWindow");
+  win.document.write("<html><head><title>Certidão de Acidente de Trânsito</title>");
+  win.document.write("<style>body { font-family: Arial, sans-serif; }</style>");
+  win.document.write("</head><body style='width: 80mm; margin: auto;'>");
+  win.document.write(printContent);
+  win.document.write("</body></html>");
+  win.document.close();
 
-      // Enviar dados para a impressora Bluetooth
-      await characteristic.writeValue(new TextEncoder().encode(printContent));
-
-      // Exibir mensagem de sucesso
-      alert("Documento enviado para impressão com sucesso!");
-  } catch (error) {
-      console.error("Erro ao imprimir:", error);
-      alert("Erro ao imprimir documento. Por favor, tente novamente.");
-  }
-}
-
-// Função para verificar se o Bluetooth está disponível no dispositivo
-async function verificarBluetoothDisponivel() {
-  try {
-      const isBluetoothAvailable = await navigator.bluetooth.getAvailability();
-      return isBluetoothAvailable;
-  } catch (error) {
-      console.error("Erro ao verificar a disponibilidade do Bluetooth:", error);
-      return false;
-  }
-}
-
-// Vincular a função de impressão à ação de clique do botão
-document.addEventListener("DOMContentLoaded", async function() {
-  // Verificar se o Bluetooth está disponível
-  const isBluetoothAvailable = await verificarBluetoothDisponivel();
-  if (!isBluetoothAvailable) {
-      alert("Bluetooth não disponível no dispositivo.");
-      return;
-  }
-
-  // Gerar o conteúdo a ser impresso
-  const printContent = gerarConteudoImpressao();
-
-  // Imprimir via Bluetooth
-  imprimirViaBluetooth(printContent);
+  // Imprimindo a janela
+  win.print();
 });
