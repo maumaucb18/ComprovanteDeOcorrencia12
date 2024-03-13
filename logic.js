@@ -66,4 +66,6 @@ async function imprimirViaBluetooth() {
 }
 
 // Vincular a função de impressão à ação de clique do botão
-document.getElementById("btnPrint").addEventListener("click", imprimirViaBluetooth);
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("btnPrint").addEventListener("click", imprimirViaBluetooth);
+});
