@@ -22,7 +22,7 @@ async function imprimirViaBluetooth() {
       // Solicitar permissão para acessar dispositivos Bluetooth
       const device = await navigator.bluetooth.requestDevice({
           filters: [{ services: ['00001234-0000-1000-8000-00805f9b34fb'] }],
-          optionalServices: ['AA:3D:78:AA:AD:45']
+          optionalServices: ['00001234-0000-1000-8000-00805f9b34fb']
       });
 
       // Conectar à impressora Bluetooth selecionada
