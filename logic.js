@@ -1,35 +1,5 @@
-// Verifica se o Bluetooth está disponível no dispositivo
-async function verificarBluetoothDisponivel() {
+async function gerarPDF() {
   try {
-      const isBluetoothAvailable = await navigator.bluetooth.getAvailability();
-      return isBluetoothAvailable;
-  } catch (error) {
-      console.error("Erro ao verificar a disponibilidade do Bluetooth:", error);
-      return false;
-  }
-}
-
-// Função para imprimir via Bluetooth
-async function imprimirViaBluetooth() {
-  try {
-      // Verificar se o Bluetooth está disponível
-      const isBluetoothAvailable = await verificarBluetoothDisponivel();
-      if (!isBluetoothAvailable) {
-          alert("Bluetooth não disponível no dispositivo.");
-          return;
-      }
-
-      // Solicitar permissão para acessar dispositivos Bluetooth
-      const device = await navigator.bluetooth.requestDevice({
-          filters: [{ services: ['00001800-0000-1000-8000-00805f9b34fb'] }],
-          optionalServices: ['00001800-0000-1000-8000-00805f9b34fb']
-      });
-
-      // Conectar à impressora Bluetooth selecionada
-      const server = await device.gatt.connect();
-      const service = await server.getPrimaryService('00001800-0000-1000-8000-00805f9b34fb');
-      const characteristic = await service.getCharacteristic('00001234-0000-1000-8000-00805f9b34fb');
-
       // Obter dados do formulário
       var grupoRodoviario = document.getElementById("grupo_rodoviario").value.toUpperCase();
       var dataAcidente = document.getElementById("data_acidente").value;
@@ -38,34 +8,51 @@ async function imprimirViaBluetooth() {
       var km = document.getElementById("km").value.toUpperCase();
       var ME = document.getElementById("ME").value.toUpperCase();
 
-      // Construir conteúdo a ser impresso
-      var printContent = "Comando Rodoviário da Brigada Militar\n";
-      printContent += "Certidão de Acidente de Trânsito\n";
-      printContent += "Grupo Rodoviário: " + grupoRodoviario + "\n";
-      printContent += "Data do Acidente: " + dataAcidente + "\n";
-      printContent += "Hora do Acidente: " + horaAcidente + "\n";
-      printContent += "Rodovia: " + rodovia + "\n";
-      printContent += "Km: " + km + "\n";
-      printContent += "Militar Atendente: " + ME + "\n";
-      printContent += "Telefone de Contato: (51) 36055000\n";
-      printContent += "Solicite sua ocorrência através do site http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/\n";
-      printContent += "Retire sua ocorrência com a chave de acesso pelo site https://crbm.bm.rs.gov.br/retire-sua-certidao/";
+      // Construir conteúdo do PDF
+      var pdfDoc = await PDFLib.PDFDocument.create();
+      var page = pdfDoc.addPage([250, 400]); // Tamanho da página em pontos (80mm x 120mm)
 
-      // Enviar dados para a impressora Bluetooth
-      await characteristic.writeValue(new TextEncoder().encode(printContent));
+      var content = [
+          `Comando Rodoviário da Brigada Militar`,
+          `Certidão de Acidente de Trânsito`,
+          `Grupo Rodoviário: ${grupoRodoviario}`,
+          `Data do Acidente: ${dataAcidente}`,
+          `Hora do Acidente: ${horaAcidente}`,
+          `Rodovia: ${rodovia}`,
+          `Km: ${km}`,
+          `Militar Atendente: ${ME}`,
+          `Telefone de Contato: (51) 36055000`,
+          `Solicite sua ocorrência através do site http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/`,
+          `Retire sua ocorrência com a chave de acesso pelo site https://crbm.bm.rs.gov.br/retire-sua-certidao/`
+      ];
 
-      // Fechar a conexão com a impressora
-      await server.disconnect();
+      var yOffset = page.getHeight() - 20;
+      for (const line of content) {
+          yOffset -= 20;
+          page.drawText(line, {
+              x: 20,
+              y: yOffset,
+              size: 10
+          });
+      }
 
-      // Exibir mensagem de sucesso
-      alert("Documento enviado para impressão com sucesso!");
+      // Converter PDF para Blob
+      var pdfBytes = await pdfDoc.save();
+      var pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
+
+      // Criar URL do Blob
+      var pdfURL = URL.createObjectURL(pdfBlob);
+
+      // Abrir o PDF em uma nova aba
+      window.open(pdfURL);
+
   } catch (error) {
-      console.error("Erro ao imprimir:", error);
-      alert("Erro ao imprimir documento. Por favor, tente novamente.");
+      console.error("Erro ao gerar PDF:", error);
+      alert("Erro ao gerar PDF. Por favor, tente novamente.");
   }
 }
 
-// Vincular a função de impressão à ação de clique do botão
+// Vincular a função de geração de PDF à ação de clique do botão
 document.addEventListener("DOMContentLoaded", function() {
-  document.getElementById("btnPrint").addEventListener("click", imprimirViaBluetooth);
+  document.getElementById("btnPrint").addEventListener("click", gerarPDF);
 });
