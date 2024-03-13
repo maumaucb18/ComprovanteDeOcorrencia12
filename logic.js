@@ -21,14 +21,14 @@ async function imprimirViaBluetooth() {
 
       // Solicitar permissão para acessar dispositivos Bluetooth
       const device = await navigator.bluetooth.requestDevice({
-          filters: [{ services: ['print_service_uuid'] }],
-          optionalServices: ['print_service_uuid']
+          filters: [{ services: ['AA:3D:78:AA:AD:45'] }],
+          optionalServices: ['AA:3D:78:AA:AD:45']
       });
 
       // Conectar à impressora Bluetooth selecionada
       const server = await device.gatt.connect();
-      const service = await server.getPrimaryService('print_service_uuid');
-      const characteristic = await service.getCharacteristic('print_characteristic_uuid');
+      const service = await server.getPrimaryService('AA:3D:78:AA:AD:45');
+      const characteristic = await service.getCharacteristic('AA:3D:78:AA:AD:45');
 
       // Obter dados do formulário
       var grupoRodoviario = document.getElementById("grupo_rodoviario").value.toUpperCase();
@@ -53,7 +53,7 @@ async function imprimirViaBluetooth() {
 
       // Enviar dados para a impressora Bluetooth
       await characteristic.writeValue(new TextEncoder().encode(printContent));
-      
+
       // Fechar a conexão com a impressora
       await server.disconnect();
 
