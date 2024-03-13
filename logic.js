@@ -1,5 +1,31 @@
-// Verifica se o Bluetooth está disponível no dispositivo
-// Verifica se o Bluetooth está disponível no dispositivo
+// Classe para lidar com a impressora Bluetooth
+class BluetoothPrinter {
+  constructor() {
+      this.socket = null;
+  }
+
+  async conectarImpressoraBluetooth() {
+      try {
+          // Solicitar permissão para acessar dispositivos Bluetooth
+          const device = await navigator.bluetooth.requestDevice({
+              filters: [{ services: ['00001800-0000-1000-8000-00805f9b34fb'] }],
+              optionalServices: ['00001800-0000-1000-8000-00805f9b34fb']
+          });
+
+          // Conectar à impressora Bluetooth selecionada
+          const server = await device.gatt.connect();
+          const service = await server.getPrimaryService('00001800-0000-1000-8000-00805f9b34fb');
+          const characteristic = await service.getCharacteristic('00001234-0000-1000-8000-00805f9b34fb');
+
+          return characteristic;
+      } catch (error) {
+          console.error("Erro ao conectar-se à impressora Bluetooth:", error);
+          return null;
+      }
+  }
+}
+
+// Função para verificar se o Bluetooth está disponível no dispositivo
 async function verificarBluetoothDisponivel() {
   try {
       const isBluetoothAvailable = await navigator.bluetooth.getAvailability();
@@ -20,16 +46,13 @@ async function imprimirViaBluetooth() {
           return;
       }
 
-      // Solicitar permissão para acessar dispositivos Bluetooth
-      const device = await navigator.bluetooth.requestDevice({
-          filters: [{ services: ['00001800-0000-1000-8000-00805f9b34fb'] }],
-          optionalServices: ['00001800-0000-1000-8000-00805f9b34fb']
-      });
-
-      // Conectar à impressora Bluetooth selecionada
-      const server = await device.gatt.connect();
-      const service = await server.getPrimaryService('00001800-0000-1000-8000-00805f9b34fb');
-      const characteristic = await service.getCharacteristic('00001234-0000-1000-8000-00805f9b34fb');
+      // Instanciar a classe BluetoothPrinter e conectar-se à impressora Bluetooth
+      const printer = new BluetoothPrinter();
+      const characteristic = await printer.conectarImpressoraBluetooth();
+      if (!characteristic) {
+          alert("Não foi possível conectar-se à impressora Bluetooth.");
+          return;
+      }
 
       // Obter dados do formulário
       var grupoRodoviario = document.getElementById("grupo_rodoviario").value.toUpperCase();
@@ -54,9 +77,6 @@ async function imprimirViaBluetooth() {
 
       // Enviar dados para a impressora Bluetooth
       await characteristic.writeValue(new TextEncoder().encode(printContent));
-
-      // Fechar a conexão com a impressora
-      await server.disconnect();
 
       // Exibir mensagem de sucesso
       alert("Documento enviado para impressão com sucesso!");
