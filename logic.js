@@ -19,11 +19,10 @@ async function imprimirViaBluetooth() {
           return;
       }
 
-      // Solicitar permissão para acessar dispositivos Bluetooth
       const device = await navigator.bluetooth.requestDevice({
-          filters: [{ services: ['00001800-0000-1000-8000-00805f9b34fb'] }],
-          optionalServices: ['00001800-0000-1000-8000-00805f9b34fb']
-      });
+        filters: [{ services: ['00001800-0000-1000-8000-00805f9b34fb'] }],
+        optionalServices: ['00001800-0000-1000-8000-00805f9b34fb']
+    });
 
       // Conectar à impressora Bluetooth selecionada
       const server = await device.gatt.connect();
