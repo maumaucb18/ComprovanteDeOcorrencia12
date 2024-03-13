@@ -30,7 +30,7 @@ async function gerarPDF() {
       for (const line of content) {
           yOffset -= 20;
           page.drawText(line, {
-              x: 20,
+              x: 40,
               y: yOffset,
               size: 10
           });
