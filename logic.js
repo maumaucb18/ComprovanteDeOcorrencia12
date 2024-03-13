@@ -10,7 +10,7 @@ async function gerarPDF() {
 
       // Construir conteúdo do PDF
       var pdfDoc = await PDFLib.PDFDocument.create();
-      var page = pdfDoc.addPage([250, 400]); // Tamanho da página em pontos (80mm x 120mm)
+      var page = pdfDoc.addPage([80 * 4, 400]); // Definindo a largura da página como 80mm (80 * 4 pontos = 320 pontos)
 
       var content = [
           `Comando Rodoviário da Brigada Militar`,
