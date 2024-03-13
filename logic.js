@@ -1,28 +1,21 @@
-// Verifica se o Bluetooth está ativado no dispositivo
-function verificarBluetoothAtivado() {
-  return new Promise((resolve, reject) => {
-      if ("bluetooth" in navigator) {
-          navigator.bluetooth.getAvailability()
-              .then(availability => {
-                  resolve(availability.avaliable);
-              })
-              .catch(error => {
-                  reject(error);
-              });
-      } else {
-          reject(new Error("Bluetooth não está disponível neste navegador."));
-      }
-  });
+// Verifica se o Bluetooth está disponível no dispositivo
+async function verificarBluetoothDisponivel() {
+  try {
+      const isBluetoothAvailable = await navigator.bluetooth.getAvailability();
+      return isBluetoothAvailable;
+  } catch (error) {
+      console.error("Erro ao verificar a disponibilidade do Bluetooth:", error);
+      return false;
+  }
 }
 
-// Função para solicitar permissão para acessar dispositivos Bluetooth
-async function solicitarPermissaoBluetooth() {
+// Função para imprimir via Bluetooth
+async function imprimirViaBluetooth() {
   try {
-      // Verificar se o Bluetooth está ativado
-      const bluetoothAtivado = await verificarBluetoothAtivado();
-      
-      if (!bluetoothAtivado) {
-          alert("O Bluetooth não está ativado no dispositivo.");
+      // Verificar se o Bluetooth está disponível
+      const isBluetoothAvailable = await verificarBluetoothDisponivel();
+      if (!isBluetoothAvailable) {
+          alert("Bluetooth não disponível no dispositivo.");
           return;
       }
 
@@ -36,10 +29,6 @@ async function solicitarPermissaoBluetooth() {
       const server = await device.gatt.connect();
       const service = await server.getPrimaryService('print_service_uuid');
       const characteristic = await service.getCharacteristic('print_characteristic_uuid');
-
-// Chamar a função para solicitar permissão para acessar dispositivos Bluetooth
-solicitarPermissaoBluetooth();
-
 
       // Obter dados do formulário
       var grupoRodoviario = document.getElementById("grupo_rodoviario").value.toUpperCase();
