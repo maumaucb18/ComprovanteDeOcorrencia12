@@ -45,8 +45,11 @@ async function gerarPDF() {
         // Criar URL do Blob
         var pdfURL = URL.createObjectURL(pdfBlob);
   
-        // Abrir o PDF em uma nova aba
-        window.open(pdfURL);
+        // Abrir o PDF em uma nova aba para impressão
+        var printWindow = window.open(pdfURL);
+        printWindow.onload = function() {
+            printWindow.print();
+        };
   
     } catch (error) {
         console.error("Erro ao gerar PDF:", error);
