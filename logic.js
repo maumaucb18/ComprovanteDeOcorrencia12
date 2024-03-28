@@ -1,4 +1,4 @@
-Para ajasync function gerarPDF() {
+async function gerarPDF() {
   try {
       // Obter dados do formulário
       var grupoRodoviario = document.getElementById("grupo_rodoviario").value.toUpperCase();
