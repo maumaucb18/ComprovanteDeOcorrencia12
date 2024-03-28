@@ -1,63 +1,36 @@
-async function gerarPDF() {
-    try {
-        // Obter dados do formulário
-        var grupoRodoviario = document.getElementById("grupo_rodoviario").value.toUpperCase();
-        var dataAcidente = document.getElementById("data_acidente").value;
-        var horaAcidente = document.getElementById("hora_acidente").value;
-        var rodovia = document.getElementById("rodovia").value.toUpperCase();
-        var km = document.getElementById("km").value.toUpperCase();
-        var ME = document.getElementById("ME").value.toUpperCase();
-  
-        // Construir conteúdo do PDF
-        var pdfDoc = await PDFLib.PDFDocument.create();
-        var page = pdfDoc.addPage([595, 842]); // Tamanho padrão do papel A4 em pontos (595x842)
-  
-        var content = [
-            `Comando Rodoviário da Brigada Militar`,
-            `Certidão de Acidente de Trânsito`,
-            `Grupo Rodoviário: ${grupoRodoviario}`,
-            `Data do Acidente: ${dataAcidente}`,
-            `Hora do Acidente: ${horaAcidente}`,
-            `Rodovia: ${rodovia}`,
-            `Km: ${km}`,
-            `Militar Atendente: ${ME}`,
-            `Telefone de Contato: (51) 36055000`,
-            `Solicite sua ocorrência através do site http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/`,
-            `Retire sua ocorrência com a chave de acesso pelo site https://crbm.bm.rs.gov.br/retire-sua-certidao/`
-        ];
+document.getElementById("btnPrint").addEventListener("click", function () {
+    var grupoRodoviario = document.getElementById("grupo_rodoviario").value.toUpperCase();
+    var dataAcidente = document.getElementById("data_acidente").value;
+    var horaAcidente = document.getElementById("hora_acidente").value;
+    var rodovia = document.getElementById("rodovia").value.toUpperCase();
+    var km = document.getElementById("km").value.toUpperCase();
+    var ME = document.getElementById("ME").value.toUpperCase();
 
-        var lineHeight = 12; // Altura da linha de texto
-        var yOffset = (page.getHeight() - (lineHeight * content.length)) / 2; // Calcular a posição vertical inicial
+    // Adicionando o cabeçalho
+    var printContent = "<h1 style='text-align:center;'>Comando Rodoviário da Brigada Militar</h1>";
+    printContent += "<h2 style='text-align:center;'>Certidão de Acidente de Trânsito</h2>";
+    
+    // Adicionando os dados do formulário
+    printContent += "<p><strong>Grupo Rodoviário:</strong> " + grupoRodoviario + "</p>";
+    printContent += "<p><strong>Data do Acidente:</strong> " + dataAcidente + "</p>";
+    printContent += "<p><strong>Hora do Acidente:</strong> " + horaAcidente + "</p>";
+    printContent += "<p><strong>Rodovia:</strong> " + rodovia + "</p>";
+    printContent += "<p><strong>Km:</strong> " + km + "</p>";
+    printContent += "<p><strong>Militar Atendente:</strong> " + ME + "</p>";
 
-        for (const line of content) {
-            page.drawText(line, {
-                x: 50, // Margem esquerda
-                y: yOffset,
-                size: 12
-            });
-            yOffset -= lineHeight; // Atualizar a posição vertical para a próxima linha
-        }
-  
-        // Converter PDF para Blob
-        var pdfBytes = await pdfDoc.save();
-        var pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
-  
-        // Criar URL do Blob
-        var pdfURL = URL.createObjectURL(pdfBlob);
-  
-        // Abrir o PDF em uma nova aba para impressão
-        var printWindow = window.open(pdfURL);
-        printWindow.onload = function() {
-            printWindow.print();
-        };
-  
-    } catch (error) {
-        console.error("Erro ao gerar PDF:", error);
-        alert("Erro ao gerar PDF. Por favor, tente novamente.");
-    }
-}
+    printContent += "<p><strong>Telefone de Contato: (51) 36055000 </strong></p>";
+    printContent += "<p><strong>Solicite sua ocorrência através do site <a href='http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/'>http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/</a></strong></p>";
+    printContent += "<p><strong>Retire sua ocorrência com a chave de acesso pelo site <a href='https://crbm.bm.rs.gov.br/retire-sua-certidao/'>https://crbm.bm.rs.gov.br/retire-sua-certidao/</a></strong></p>";
 
-// Vincular a função de geração de PDF à ação de clique do botão
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("btnPrint").addEventListener("click", gerarPDF);
+    // Criando uma nova janela para impressão
+    var win = window.open("", "printWindow");
+    win.document.write("<html><head><title>Certidão de Acidente de Trânsito</title>");
+    win.document.write("<style>body { font-family: Arial, sans-serif; }</style>");
+    win.document.write("</head><body style='width: 80mm; margin: auto;'>");
+    win.document.write(printContent);
+    win.document.write("</body></html>");
+    win.document.close();
+
+    // Imprimindo a janela
+    win.print();
 });
