@@ -30,7 +30,7 @@ async function gerarPDF() {
         for (const line of content) {
             yOffset -= 20;
             page.drawText(line, {
-                x: 50, // Margem esquerda de 50 pontos
+                x: 150, // Margem esquerda de 50 pontos
                 y: yOffset,
                 size: 12 // Tamanho da fonte ajustado para o formato A4
             });
