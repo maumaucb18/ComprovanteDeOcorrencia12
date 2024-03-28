@@ -25,15 +25,17 @@ async function gerarPDF() {
             `Solicite sua ocorrência através do site http://crbm.br.rs.gov.br/solicite-sua-certidao-interno/`,
             `Retire sua ocorrência com a chave de acesso pelo site https://crbm.bm.rs.gov.br/retire-sua-certidao/`
         ];
-  
-        var yOffset = page.getHeight() - 20;
+
+        var lineHeight = 12; // Altura da linha de texto
+        var yOffset = (page.getHeight() - (lineHeight * content.length)) / 2; // Calcular a posição vertical inicial
+
         for (const line of content) {
-            yOffset -= 20;
             page.drawText(line, {
-                x: 350, // Margem esquerda de 50 pontos
+                x: 50, // Margem esquerda
                 y: yOffset,
-                size: 12 // Tamanho da fonte ajustado para o formato A4
+                size: 12
             });
+            yOffset -= lineHeight; // Atualizar a posição vertical para a próxima linha
         }
   
         // Converter PDF para Blob
@@ -50,9 +52,9 @@ async function gerarPDF() {
         console.error("Erro ao gerar PDF:", error);
         alert("Erro ao gerar PDF. Por favor, tente novamente.");
     }
-  }
-  
-  // Vincular a função de geração de PDF à ação de clique do botão
-  document.addEventListener("DOMContentLoaded", function() {
+}
+
+// Vincular a função de geração de PDF à ação de clique do botão
+document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("btnPrint").addEventListener("click", gerarPDF);
-  });
+});
