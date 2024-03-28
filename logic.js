@@ -1,4 +1,4 @@
-async function gerarPDF() {
+Para ajasync function gerarPDF() {
   try {
       // Obter dados do formulário
       var grupoRodoviario = document.getElementById("grupo_rodoviario").value.toUpperCase();
@@ -10,7 +10,7 @@ async function gerarPDF() {
 
       // Construir conteúdo do PDF
       var pdfDoc = await PDFLib.PDFDocument.create();
-      var page = pdfDoc.addPage([80 * 4, 400]); // Definindo a largura da página como 80mm (80 * 4 pontos = 320 pontos)
+      var page = pdfDoc.addPage([80, 400]); // Definindo a largura da página como 80mm
 
       var content = [
           `Comando Rodoviário da Brigada Militar`,
@@ -30,7 +30,7 @@ async function gerarPDF() {
       for (const line of content) {
           yOffset -= 20;
           page.drawText(line, {
-              x: 20,
+              x: 10,
               y: yOffset,
               size: 10
           });
