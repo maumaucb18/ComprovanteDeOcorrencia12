@@ -10,7 +10,6 @@ document.getElementById("btnPrint").addEventListener("click", async function () 
 
     // Adicionando o cabeçalho
     let printContent = "<h1 style='text-align:center;'>";
-    printContent += "<img src='./img/rodoviario.png' alt='Rodoviário' style='width:100px;height:auto;'><br>";
     printContent += "Comando Rodoviário da Brigada Militar</h1>";
     printContent += "<h2 style='text-align:center;'>Solicitação de Certidão de Acidente de Trânsito</h2>";
     
